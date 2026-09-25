@@ -6,7 +6,7 @@ A portable Windows app for maintaining a TeknoParrot library, reviewing LaunchBo
 
 ## Download
 
-Download the Windows x64 portable ZIP from [GitHub Releases](https://github.com/ArcadeAdam/arcade-library-manager/releases/latest). Extract the entire ZIP before running the app. The self-contained build includes the .NET runtime; game files, emulator installations, media subscriptions and FFmpeg remain separate.
+Download the Windows x64 portable ZIP from [GitHub Releases](https://github.com/ArcadeAdam/arcade-library-manager/releases). Extract the entire ZIP before running the app. The self-contained build includes the .NET runtime; game files, emulator installations, media subscriptions and FFmpeg remain separate.
 ## Start here
 
 1. Extract the entire Windows x64 release into a writable folder. Keep its files and `assets` folder together.
