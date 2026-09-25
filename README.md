@@ -4,6 +4,9 @@ A portable Windows app for maintaining a TeknoParrot library, reviewing LaunchBo
 
 **Version 0.2.20 is a working preview.** Newly generated themes and previews default to 30 seconds, adjustable from 25 to 33 seconds. Short gameplay snaps loop to fill the selected duration; reference presets follow the same limits. It runs real operations against folders you choose. It opens on Setup and waits for your actions; it does not update or scan libraries automatically at startup. See [implemented scope and limitations](docs/IMPLEMENTATION.md) for the exact feature coverage.
 
+## Download
+
+Download the Windows x64 portable ZIP from [GitHub Releases](https://github.com/ArcadeAdam/arcade-library-manager/releases/latest). Extract the entire ZIP before running the app. The self-contained build includes the .NET runtime; game files, emulator installations, media subscriptions and FFmpeg remain separate.
 ## Start here
 
 1. Extract the entire Windows x64 release into a writable folder. Keep its files and `assets` folder together.
