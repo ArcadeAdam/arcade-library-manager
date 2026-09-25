@@ -1,0 +1,67 @@
+# Implementation status — version 0.2.20
+
+This file describes the implemented Windows preview. The broader [specification](SPECIFICATION.md) remains a roadmap, not a claim that every proposed feature ships.
+
+## Implemented
+
+| Area | Current behavior |
+| --- | --- |
+| Maintenance | One reviewed game selection runs installation, LaunchBox sync, themes, and bezels with durable per-stage results and fresh-review resume. |
+| Discovery | Read-only proposals from selected folders and known adjacent installations; apply fills empty settings and preserves configured locations. |
+| Desktop | Portable WinForms UI with Setup, Library, Maintenance, Install games, LaunchBox, Emumovies snap scrapper, Make themes, Bezels, and Jobs; asynchronous operations, cancellation, selected-item plans, reports, and presets. |
+| Settings | Multiple ROM source folders; emulator/LaunchBox/output/cache/archive paths; media/reference preferences; bezel sources; local theme settings. No personal machine paths are distributed as defaults. |
+| Catalog | Reads current released TeknoParrot templates, existing user profiles, local metadata, and bundled exact-edition recipes. Excludes DevOnly entries. Shows missing paths and subscription indicators. |
+| Library filters | Genre button with metadata-based categories, Racing/Racer/Driving aliases, Unspecified, and combined search/status filters. Install/maintenance review uses checked visible games; bulk buttons replace selection with matching shown games. |
+| Local matching | Reusable SQLite filename inventory; recipe ROM CRC/size and optional content SHA1 checks; CHD header identity checks; archive-member size and launch-file CRC comparison for reusable extracted packages; `.acgame` dependency existence checks. |
+| Game installation | Local reuse, exact local ZIP extraction, or exact Archive.org ZIP download; resumable HTTP transfers with ETag/range handling; checksums; isolated extraction and CRC checks; owned staging/completion markers; path validation before registration. |
+| Profiles | Creates missing profiles from templates. Repairs planned paths in existing profiles while retaining controls and unrelated values; detects stale profile/template hashes and backs up repaired profiles. |
+| Launch setup | Read-only inspection during Setup/save/discovery; effective associated-platform/global command, implicit ROM append, filename/quoting options, exact emulator identity and specific diagnostics. Reviewed single-file repair/create with backups, closed-process/volume guards and stale-preview rejection. |
+| Emulator updates | Checks known components using TeknoParrot's official feed. Rechecks reviewed releases, requires published SHA256 for changes, protects user configuration, verifies backups, journals replacement, and supports recovery/rollback. |
+| LaunchBox | Read-only XML preview followed by guarded atomic platform commit; exact profile matching includes additional applications; preserves unrelated XML, IDs, history, favorites, existing version structure, and hooks. Duplicate identities remain reviewable. |
+| EmuMovies videos | Controls separately installed official Sync 2.71; per-platform catalog and ROM-folder choices; TeknoParrot hardware routing; video-only staging, preview/import, existing-video preservation, cancellation, missing reports, and saved choices. Downloads require Sync open and signed in; local preview/import work with it closed. TeknoParrot initially suggests the configured emulator UserProfiles folder and preserves saved choices. Credentials stay in Sync. |
+| Local media | Finds artwork, logos, snaps, and themes through LaunchBox folders/overrides and conservative names/identities; respects existing theme results. |
+| Theme reuse | Classic Arcade / Sega Model 2 theme discovery by hardware, ROM identity, unique shared database ID, or conservative title; folder overrides and folder-only Model 2 support. Selected batch / Maintenance copy into the configured target theme folder without snaps/tools, with locked source metadata, verified bytes, volume/cancellation guards and atomic no-overwrite publication. |
+| Theme progress | Selected-batch queue with per-game status/time, overall progress, elapsed timer and an estimate based on completed theme jobs. Current task progress stays in the bottom status bar. Pause finishes the current theme and waits before the next; timers exclude paused time. Resume and cancellation remain available. Cancellation preserves completed results and freezes the batch timer. |
+| Theme video | FFmpeg Fanart/Cinema compositions; native-aspect offset gameplay, animated luminous border, independently moving transparent foreground layers, bounded fanart drift and soft portrait-art fallback; local general/illustration cutout models with pinned downloads and caching; per-game imported layer packs; preview output separate from the library; decoded-output validation before publication. |
+| Bezels | Local repository picker on the Bezels page; exact PNG/ZIP matching through repository subfolders after MAME artwork; duplicate review; supported alpha overlays, template-documented destinations/settings, explicit display-setting changes, per-game backups, and rollback. Repository changes require a fresh review. |
+| Recovery | Shared-ROM errors name checked companion ZIPs; fresh indexed retries can reuse staging CHDs with their final paths. SQLite game-job journal and Resume unfinished; game downloads/staging survive interruption; update transactions and LaunchBox/bezel journals preserve operation-specific recovery information. |
+| Filesystem readiness | Read-only Windows volume queries distinguish clean, dirty, unknown, read-only, and not-applicable states. Dirty/unknown/read-only results block guarded writes; no repair or dirty-flag reset is attempted. |
+
+## Rendering performance
+
+Rendering uses the available GPU video encoder automatically (NVIDIA, Intel, or AMD), with CPU fallback if hardware encoding cannot initialize. Static artwork is resized and blurred once per render and reused before the animation effects. CPU decoding, composition, and software encoding use bounded parallel threads; there is no Quiet mode. The selected encoder and render time are recorded beside each generated theme. The scene composition still uses CPU filters.
+
+## Removed in 0.2.7
+
+Artwork downloads, metadata-provider downloads/import, EmuMovies login/storage, and media-queue handoffs are removed. A separate video-only EmuMovies Sync page was added in 0.2.10. LaunchBox continues to handle artwork downloads. Theme rendering requires a local gameplay snap and reads local artwork, logos, cutouts, and folder overrides; LaunchBox game synchronization can read the existing local metadata database. Bezel setup remains available as a separate page.
+
+## Boundaries that matter
+
+- The app manages existing TeknoParrot and LaunchBox installations; it can create or repair the TeknoParrot emulator entry in an existing LaunchBox installation after review. It does not install either application from scratch, configure controls, create card/account IDs, or prove games are playable.
+- Recipes are data mappings, not remote executable scripts. New TeknoParrot support does not automatically create a reliable game recipe. Unmapped or ambiguous editions remain for review, with a no-download-mapping notice distinct from a failed download. Complete local sets remain usable. Over Rev preserves the merged overrev.zip container and validates both its parent contents and the profile's default Model 2B Rev B programs/shared device.
+- Archive access currently supports HTTPS `archive.org/details/...` or `archive.org/download/...` URLs, ZIP files, and linked items discovered from descriptions. It is not a universal archive crawler, arbitrary-host adapter, authenticated downloader, or RAR/7z extractor. The 7-Zip setting is reserved; this release's extraction uses ZIP support directly.
+- Indexing explicitly walks selected sources and stores relevant file records. It is not a live filesystem watcher or a complete incremental directory-change engine. Large sources can require a lengthy initial walk.
+- ROM and launch-path validation is scoped to each recipe. CHD header identities are checked; the app does not perform a full CHD surface verification or infer every emulator's media geometry. Missing dependencies remain a failure, not an assumed success.
+- Game installation runs sequentially to limit disk pressure. There is a download bandwidth limit, but no general per-volume scheduler, detached worker service, or automatic keep-awake facility. Maintenance connects the four available stages: Install, LaunchBox, Theme, and Bezel.
+- Jobs resume individual game-install plans; Maintenance resumes unfinished stages in recorded batches. Standalone media actions are rerun explicitly. Closing the app ends its active work; it does not schedule continued processing.
+- LaunchBox integration uses guarded XML updates and the existing platform/emulator association. It selects one ready version per game (USA, World, then other regions). Reviewed Consolidate actions remove verified duplicate regional/version entries with backups; verified ELF/ELFLoader2 pairs use Combine to retain the older loader as an additional application while ELFLoader2 becomes the default. Affected supported playlist references are updated with the platform in one recoverable transaction; unsupported references or conflicting hooks/custom fields require review. ROM files and TeknoParrot profiles are retained. LaunchBox and Big Box must be closed for commit/undo.
+- Discord bezel sources are opened in the user's browser. Packs are downloaded manually and imported locally; there is no Discord token handling, private-channel scraping, or automatic attachment synchronization.
+- Bezels require an exact identity and a supported destination documented by the template. Complex MAME layouts, multiple PNG layers/views, conflicting overlays, and unsupported emulator fields are left for manual review. Fullscreen/no-stretch changes are shown in the preview; visual fit still needs testing in-game.
+- Reference themes provide aspect ratio, frame rate, duration, and audio guidance. Rendering uses explicit templates and existing media, not arbitrary scene reconstruction or generative-AI video. Existing themes are never overwritten by default.
+- **FFmpeg/ffprobe are not distributed in the release.** Use LaunchBox's `ThirdParty/FFMPEG` folder only when it contains both tools, or configure a separate compatible build. Executable, containing-directory and extracted-build-root paths are accepted; missing-companion diagnostics identify the exact file. Theme batches that need rendering check the pair once before starting the queue; reuse-only batches need neither tool. The local candidate inspected during development had a GPL-enabled build whose redistribution obligations could not be established from its adjacent license material, so it was not copied into the package.
+- Filesystem readiness is a Windows dirty-flag/read-only query, not SMART, physical-disk, or surface analysis. Unknown is not treated as clean. Some remote shares/permission configurations cannot expose this query and can therefore block guarded writes. The guard does not repair volumes.
+- Backups and undo are operation-specific. The updater has transaction recovery, LaunchBox/bezel UI exposes undo, and repaired profiles are backed up. There is no universal rollback that removes all completed game installs or reverses every media operation.
+- Automatic application/recipe updates, global deduplication, and broader archive formats remain future work.
+
+## Data and privacy
+
+The default app-owned `data` directory contains settings, SQLite inventory/job state, archive catalog caches, profile backups, and update transactions. Game payloads, extraction staging, and game-download caches use configured destinations; LaunchBox/bezel backups are recorded with those operations. Settings can be moved with the portable app. This version does not access media-provider credentials. Old account fields are ignored when loading settings and omitted when saving them.
+
+Shareable presets strip archive URL credentials and query parameters. They may include local filesystem paths and public source locations. Distribute the clean release archive, not a working copy containing personal data, download caches, backups, or game files.
+
+## Validation
+
+The source includes isolated fixture checks for installation, matching, archive safety, cancellation/resume, preservation of existing state, LaunchBox commit/rollback, local media matching, real theme rendering/decoding, updater transactions, bezels, and volume-health decisions. Desktop `--self-test` checks settings persistence, the published native SQLite dependency, legacy account-setting removal, and safe preset export. New fixtures cover setup discovery, dependency ordering, interruption/resume, selected-game restrictions, and rejection of retired artwork/provider stages in older workflows. `--smoke-test <output.png>` renders fixture-only UI pages through an invisible off-screen form, without scanning a real library or accessing credentials.
+
+These checks exercise software behavior; they do not establish compatibility for every arcade game, every LaunchBox version, or every storage configuration. Release build/test results are recorded separately by the release process.
+

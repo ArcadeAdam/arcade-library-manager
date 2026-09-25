@@ -1,0 +1,11 @@
+# Version 0.2.3
+
+The library now chooses one available version of each game, preferring **USA, then World, then another region**. For example, a new LaunchBox import with ready USA, Japan, Europe, and Asia profiles for Total Vice chooses only Total Vice (USA).
+
+The Library page still shows all scanned profiles for inspection and source matching. Bulk selections pass the candidates to the review so an unavailable USA version can fall back to an available World version. Installation keeps an existing ready profile instead of adding another regional version. Alternate versions remain visible in the preview, with a reason, and cannot be checked by Select ready or by editing their checkboxes.
+
+LaunchBox synchronization uses the same preference among ready profiles and avoids adding a second entry for a game family. A single existing family entry can be updated in place while preserving its game ID, favorites, history, curated metadata, and launch hooks. Verified ELF and ELFLoader2 loader pairs can be reviewed with the **Combine** action. The result is one LaunchBox game with ELFLoader2 as the default and the older loader retained as an additional application, following the manually combined Star Trek Voyager example. Region preference comes first; ELFLoader2 wins among otherwise equivalent ready candidates. Already combined pairs remain unchanged on repeat synchronization. Existing verified regional/version duplicates now receive a reviewed **Consolidate** action: keep the preferred LaunchBox entry, back up the removed records, and redirect affected playlist membership to the kept game. The platform and playlist updates share a durable transaction and undo journal. Ambiguous identities, conflicting hooks, or unsupported references remain review items. This cleanup does not remove ROM files or TeknoParrot profiles.
+
+Maintenance previews and resumed plans enforce the same one-version rule. Unavailable sources and ambiguous identities remain review items. Games with distinct sequel titles or meaningful edition names remain separate; the policy normalizes recognized locale and revision markers rather than removing all parenthesized title text.
+
+The LaunchBox XML compatibility fix from 0.2.2, the FFB Blaster Master color scheme, path examples, existing settings, and reviewed backup/rollback behavior are retained.

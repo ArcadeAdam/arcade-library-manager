@@ -1,0 +1,16 @@
+.tools/
+bin/
+obj/
+artifacts/
+[Dd]ata/
+*.user
+*.part
+*.log
+.artifacts/
+*.lnk
+.vs/
+*.suo
+__pycache__/
+*.py[cod]
+.env
+.env.*

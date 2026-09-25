@@ -1,0 +1,19 @@
+Subject: Developer integration request — Arcade Library Manager for Windows
+
+Hello EmuMovies team,
+
+I am developing Arcade Library Manager, a portable Windows x64 application built with .NET 10. It manages a user's existing TeknoParrot games and LaunchBox library, fills missing artwork and gameplay videos, and can compose missing local theme videos from the user's artwork and video snaps.
+
+I have a lifetime EmuMovies membership. The initial users are friends who also have their own memberships; each user would authenticate using their own account. The shared application would not contain anyone's credentials, media library, or embedded credentials belonging to another client application.
+
+I would like to integrate the currently supported EmuMovies service properly. Could you please provide the current developer onboarding requirements and API documentation, and confirm which API version new Windows applications should use? In particular, I need:
+
+1. Any application registration, developer approval, or client credentials required, plus the documented user authentication and account-capability flows.
+2. Platform and game matching, media-type/region identifiers, and metadata/media download request and response schemas.
+3. Rate limits, concurrency/retry rules, signed-download handling, checksums, caching rules, and test-account or sandbox options if available.
+4. Required notices/branding and distribution conditions, including whether local theme-video composition from a member's downloaded artwork and gameplay snaps is supported under your media terms.
+5. Whether there is a documented way for an external application or LaunchBox plugin to invoke the existing LaunchBox EmuMovies downloader for a reviewed set of game IDs, if that is the preferred integration route.
+
+The app currently preserves curated existing media and settings, previews changes, and stores passwords only in the Windows user's credential store. It does not reverse-engineer other clients or reuse their tokens. I can provide screenshots, source excerpts, and a test build if that would help your review.
+
+Thank you.
