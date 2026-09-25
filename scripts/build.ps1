@@ -28,6 +28,7 @@ try {
  New-Item -ItemType Directory -Path $publishedDocs -Force | Out-Null
  Get-ChildItem -LiteralPath '.\docs' -File | Where-Object { $_.Extension -in @('.md','.txt') } | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $publishedDocs -Force }
  if(Test-Path -LiteralPath '.\docs\licenses'){Copy-Item -LiteralPath '.\docs\licenses' -Destination $publishedDocs -Recurse -Force}
+ if(Test-Path -LiteralPath '.\docs\images'){Copy-Item -LiteralPath '.\docs\images' -Destination $publishedDocs -Recurse -Force}
  $app=Join-Path $output 'ArcadeLibraryManager.exe'
  $settingsCheck=Start-Process -FilePath $app -ArgumentList '--self-test' -WindowStyle Hidden -Wait -PassThru
  if($settingsCheck.ExitCode -ne 0){throw 'Published application settings check failed.'}
